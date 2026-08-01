@@ -1,0 +1,192 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --bg: #f3f3f5;
+  --bg-elevated: #ffffff;
+  --fg: #121212;
+  --fg-muted: #6b6b73;
+  --ring: rgba(0, 0, 0, 0.08);
+  --ring-strong: rgba(0, 0, 0, 0.14);
+  --accent: #e10600;
+  --accent-glow: rgba(225, 6, 0, 0.45);
+  --panel: rgba(255, 255, 255, 0.72);
+  --panel-border: rgba(0, 0, 0, 0.12);
+  --spotlight: rgba(255, 255, 255, 0.85);
+  --nav-bg: rgba(255, 255, 255, 0.88);
+  --lap-inactive: #9a9aa3;
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-display: "Shrikhand", cursive;
+}
+
+.dark {
+  --bg: #050505;
+  --bg-elevated: #0d0d0d;
+  --fg: #f5f5f5;
+  --fg-muted: #9a9aa3;
+  --ring: rgba(255, 255, 255, 0.08);
+  --ring-strong: rgba(255, 255, 255, 0.14);
+  --accent: #e10600;
+  --accent-glow: rgba(225, 6, 0, 0.55);
+  --panel: rgba(18, 18, 18, 0.78);
+  --panel-border: rgba(255, 255, 255, 0.14);
+  --spotlight: rgba(255, 255, 255, 0.55);
+  --nav-bg: rgba(20, 20, 20, 0.9);
+  --lap-inactive: #6b6b73;
+  --shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+}
+
+@theme inline {
+  --color-background: var(--bg);
+  --color-foreground: var(--fg);
+  --color-accent: var(--accent);
+  --font-sans: var(--font-sans);
+  --font-display: var(--font-display);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.spotlight {
+  background: linear-gradient(180deg, var(--spotlight) 0%, transparent 72%);
+  filter: blur(22px);
+  mix-blend-mode: screen;
+}
+
+.dark .spotlight {
+  mix-blend-mode: soft-light;
+}
+
+.nav-btn {
+  background: var(--nav-bg);
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(14px);
+}
+
+.glass-orb {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 63px;
+  height: 62px;
+  border-radius: 100px;
+  border: none;
+  background: #2321248f;
+  box-shadow:
+    0px 4px 8px 0px #f6f7ff38 inset,
+    0px 4px 16px 0px #f6f7ff9e inset;
+  color: #fff;
+  isolation: isolate;
+  flex-shrink: 0;
+}
+
+.glass-orb::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 100px;
+  padding: 1px;
+  background: linear-gradient(
+    180.13deg,
+    #ffffff 0.11%,
+    rgba(102, 102, 102, 0) 50%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.glass-orb-active {
+  background:
+    radial-gradient(circle at 50% 40%, #ff3b30 0%, #c40600 55%, #8a0400 100%);
+  box-shadow:
+    0 0 0 1px #e10600,
+    0 0 22px rgba(225, 6, 0, 0.65),
+    0 0 40px rgba(225, 6, 0, 0.35),
+    0px 4px 8px 0px #ffb4b438 inset,
+    0px 4px 16px 0px #ffffff55 inset;
+  color: #fff;
+}
+
+.glass-orb-active::before {
+  background: linear-gradient(
+    180.13deg,
+    rgba(255, 255, 255, 0.85) 0.11%,
+    rgba(225, 6, 0, 0) 55%
+  );
+}
+
+.accent-glow {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--accent) 80%, white),
+    0 0 24px var(--accent-glow),
+    inset 0 0 12px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--accent) 70%, white),
+      0 0 18px var(--accent-glow);
+  }
+  50% {
+    box-shadow:
+      0 0 0 2px color-mix(in srgb, var(--accent) 90%, white),
+      0 0 32px var(--accent-glow);
+  }
+}
+
+.pulse-glow {
+  animation: pulse-glow 2.4s ease-in-out infinite;
+}
+
+@keyframes orb-breathe {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.035);
+  }
+}
+
+.orb-breathe {
+  transform: translate(-50%, -50%);
+  animation: orb-breathe 8s ease-in-out infinite;
+}
+
+@keyframes draw-dash {
+  to {
+    stroke-dashoffset: -40;
+  }
+}
+
+.dash-flow {
+  animation: draw-dash 1.7s linear infinite;
+}
