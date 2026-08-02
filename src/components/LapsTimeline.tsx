@@ -37,10 +37,10 @@ export function LapsTimeline({ activeLap, onSelectLap }: LapsTimelineProps) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.25 }}
-      className="relative w-full pb-5"
+      className="relative w-full pb-3 sm:pb-5"
     >
       {/* Full-bleed track */}
-      <div className="relative h-[120px] w-full">
+      <div className="relative h-[88px] w-full sm:h-[120px]">
         <svg
           className="absolute inset-0 h-full w-full"
           viewBox="0 0 1000 100"
@@ -136,7 +136,7 @@ export function LapsTimeline({ activeLap, onSelectLap }: LapsTimelineProps) {
       </div>
 
       {/* Labels only — stems already touch dots above */}
-      <div className="relative mt-8 grid w-full grid-cols-5">
+      <div className="relative mt-4 grid w-full grid-cols-5 px-1 sm:mt-8 sm:px-0">
         {LAPS.map((lap) => {
           const active = lap.id === activeLap;
 
@@ -156,13 +156,13 @@ export function LapsTimeline({ activeLap, onSelectLap }: LapsTimelineProps) {
               >
                 <span
                   className={cn(
-                    "block text-[11px] font-semibold tracking-[0.14em]",
+                    "block text-[9px] font-semibold tracking-[0.1em] sm:text-[11px] sm:tracking-[0.14em]",
                     active && "font-bold text-white"
                   )}
                 >
                   {lap.label}
                 </span>
-                <span className="mt-0.5 block text-[10px] tracking-wide sm:text-[11px]">
+                <span className="mt-0.5 block text-[8px] tracking-wide sm:text-[11px]">
                   {lap.zone}
                 </span>
               </span>

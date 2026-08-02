@@ -68,14 +68,69 @@ body {
   background: color-mix(in srgb, var(--accent) 35%, transparent);
 }
 
-.spotlight {
-  background: linear-gradient(180deg, var(--spotlight) 0%, transparent 72%);
-  filter: blur(22px);
+/* Trapezoid beam: hard shape inside → blur on wrapper softens edges */
+.spotlight-beam {
+  pointer-events: none;
+  overflow: visible;
+}
+
+.spotlight-beam__blur {
+  position: absolute;
+  inset: -8% -12%;
+  display: block;
+  filter: blur(30px);
   mix-blend-mode: screen;
 }
 
-.dark .spotlight {
+.spotlight-beam__shape {
+  position: absolute;
+  inset: 8% 12%;
+  display: block;
+  /* Same cone: narrow top → wide bottom */
+  clip-path: polygon(44% 0%, 56% 0%, 92% 100%, 8% 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.42) 0%,
+    rgba(255, 255, 255, 0.2) 35%,
+    rgba(255, 255, 255, 0.1) 65%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
+}
+
+.dark .spotlight-beam__blur {
   mix-blend-mode: soft-light;
+}
+
+.dark .spotlight-beam__shape {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.38) 0%,
+    rgba(255, 255, 255, 0.18) 35%,
+    rgba(255, 255, 255, 0.09) 65%,
+    rgba(255, 255, 255, 0.035) 100%
+  );
+}
+
+/* Soft circle glow — light pooling under the beam */
+.car-circle-wrap {
+  position: relative;
+}
+
+.car-circle-wrap::before {
+  content: "";
+  position: absolute;
+  inset: -14%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.42) 0%,
+    rgba(200, 200, 200, 0.18) 45%,
+    transparent 72%
+  );
+  filter: blur(36px);
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.85;
 }
 
 .nav-btn {
@@ -189,4 +244,27 @@ body {
 
 .dash-flow {
   animation: draw-dash 1.7s linear infinite;
+}
+
+/* Docs journey cards — remounts on every step so flip always replays */
+@keyframes docs-card-flip {
+  0% {
+    opacity: 0;
+    transform: rotateY(-90deg) scaleX(0.4);
+  }
+  55% {
+    opacity: 1;
+    transform: rotateY(12deg) scaleX(1.04);
+  }
+  100% {
+    opacity: 1;
+    transform: rotateY(0deg) scaleX(1);
+  }
+}
+
+.docs-card-flip {
+  transform-origin: center center;
+  transform-style: preserve-3d;
+  animation: docs-card-flip 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  backface-visibility: hidden;
 }

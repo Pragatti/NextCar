@@ -15,15 +15,15 @@ export function HomeScreen() {
   const [homeKey, setHomeKey] = useState(0);
   const [showHomeRings, setShowHomeRings] = useState(false);
   const [hintDocs, setHintDocs] = useState(false);
-  /** Explore Timeline: rings flash show→hide, then stay off */
-  const [docsFlashRings, setDocsFlashRings] = useState(false);
+  /** Timeline: rings off until car appears, then stay on */
+  const [showDocsRings, setShowDocsRings] = useState(false);
 
   const handleNav = (id: NavId) => {
     if (id === "home") {
       setActiveNav("home");
       setShowHomeRings(false);
+      setShowDocsRings(false);
       setHintDocs(false);
-      setDocsFlashRings(false);
       setHomeKey((k) => k + 1);
       return;
     }
@@ -31,10 +31,10 @@ export function HomeScreen() {
     setHintDocs(false);
     setActiveNav(id);
     if (id === "docs") {
+      setShowDocsRings(false);
       setDocsKey((k) => k + 1);
-      setDocsFlashRings(true);
     } else {
-      setDocsFlashRings(false);
+      setShowDocsRings(false);
     }
   };
 
@@ -46,8 +46,8 @@ export function HomeScreen() {
     setHintDocs(true);
   }, []);
 
-  const onDocsFlashComplete = useCallback(() => {
-    setDocsFlashRings(false);
+  const onDocsRingsReady = useCallback(() => {
+    setShowDocsRings(true);
   }, []);
 
   const isDefault = activeNav === null;
@@ -61,10 +61,31 @@ export function HomeScreen() {
         : "default";
 
   return (
-    <div className="relative min-h-dvh overflow-x-hidden bg-[var(--bg)] text-[var(--fg)] transition-colors duration-500">
-      <div className="relative mx-auto flex min-h-dvh w-full max-w-[1892px] flex-col overflow-x-hidden">
+    <div
+      className={`relative min-h-dvh bg-[var(--bg)] text-[var(--fg)] transition-colors duration-500 ${
+        isDocs ? "overflow-x-visible" : "overflow-x-hidden"
+      }`}
+    >
+      <div
+        className={`relative mx-auto flex min-h-dvh w-full max-w-[1892px] flex-col ${
+          isDocs ? "overflow-x-visible" : "overflow-x-hidden"
+        }`}
+      >
         <AnimatePresence>
-          {/* Docs: no rings by default; flash show/hide on enter */}
+          {/* Default: upper beam spotlight only (no rings) */}
+          {isDefault && (
+            <motion.div
+              key="bg-default"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 z-0"
+            >
+              <BackgroundEffects rings={false} />
+            </motion.div>
+          )}
+
+          {/* Docs: spotlight always; rings after car appears, then stay */}
           {isDocs && (
             <motion.div
               key={`bg-docs-${docsKey}`}
@@ -73,11 +94,7 @@ export function HomeScreen() {
               exit={{ opacity: 0 }}
               className="absolute inset-0 z-0"
             >
-              <BackgroundEffects
-                rings={docsFlashRings}
-                flash={docsFlashRings}
-                onOpenComplete={onDocsFlashComplete}
-              />
+              <BackgroundEffects rings={showDocsRings} open={showDocsRings} />
             </motion.div>
           )}
 
@@ -129,6 +146,7 @@ export function HomeScreen() {
             view={heroView}
             docsKey={docsKey}
             onDocsHome={() => handleNav("home")}
+            onDocsRingsReady={onDocsRingsReady}
           />
         )}
       </div>

@@ -43,47 +43,46 @@ export function HomeSequence({ sequenceKey, onRingsReady }: HomeSequenceProps) {
   const showStats = phase === "stats" || phase === "rings";
 
   return (
-    <div className="relative z-10 mx-auto flex w-full max-w-[1100px] flex-1 flex-col items-center px-4 pb-40 pt-15 sm:px-8">
+    <div className="relative z-10 mx-auto flex w-full max-w-[1100px] flex-1 flex-col items-center px-4 pb-36 pt-10 sm:px-8 sm:pb-40 sm:pt-15">
       <motion.div
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.55, ease: EASE }}
-        className="text-center"
+        className="relative z-20 px-2 text-center"
       >
-        <h1 className="font-[family-name:var(--font-display)] text-[clamp(2rem,5vw,60px)] font-normal italic uppercase leading-[39px] tracking-[0.01em]">
+        <h1 className="font-[family-name:var(--font-display)] text-[clamp(1.6rem,5vw,60px)] font-normal italic uppercase leading-[1.05] tracking-[0.01em] sm:leading-[39px]">
           <span className="text-[var(--fg)]">Engineered for </span>
           <span className="text-[var(--accent)] drop-shadow-[0_0_22px_var(--accent-glow)]">
             passion
           </span>
         </h1>
-        <p className="mt-3 font-[family-name:var(--font-sans)] text-[15px] font-medium tracking-normal text-[#D1D1D1]">
+        <p className="mt-2 font-[family-name:var(--font-sans)] text-[13px] font-medium tracking-normal text-[#D1D1D1] sm:mt-3 sm:text-[15px]">
           Precision. Power. Performance
         </p>
         <span className="mx-auto mt-2.5 block h-[3px] w-5 rounded-full bg-[#C85A5A]" />
       </motion.div>
 
-      <div className="relative mt-6 flex w-full flex-1 items-center justify-center sm:mt-8">
+      {/* Spacer keeps page flow; car is viewport-centered with innermost ring */}
+      <div className="relative mt-4 min-h-[min(72vw,300px)] w-full flex-1 sm:mt-8">
         <motion.div
           initial={{ opacity: 0, scale: 0.88 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.75, ease: EASE }}
-          className="relative z-10"
-          style={{
-            width: "min(62vw, 342.703px)",
-            height: "min(62vw, 341.38px)",
-          }}
+          className="fixed left-1/2 top-[48%] z-10 size-[min(72vw,300px)] -translate-x-1/2 -translate-y-1/2 sm:top-1/2"
         >
-          <div className="relative h-full w-full overflow-hidden rounded-full">
-            <motion.img
-              key={`home-car-${sequenceKey}`}
-              src={CARS.dashboard}
-              alt="NEXTCAR performance vehicle"
-              initial={{ opacity: 0, scale: 1.06 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.7, ease: EASE }}
-              className="absolute inset-0 h-full w-full object-cover object-[50%_45%]"
-              draggable={false}
-            />
+          <div className="car-circle-wrap h-full w-full">
+            <div className="relative h-full w-full overflow-hidden rounded-full border border-white/25">
+              <motion.img
+                key={`home-car-${sequenceKey}`}
+                src={CARS.dashboard}
+                alt="NEXTCAR performance vehicle"
+                initial={{ opacity: 0, scale: 1.06 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.7, ease: EASE }}
+                className="absolute inset-0 h-full w-full object-cover object-[50%_45%]"
+                draggable={false}
+              />
+            </div>
           </div>
 
           {/* 2) Range indicators after car appears */}
@@ -139,6 +138,30 @@ export function HomeSequence({ sequenceKey, onRingsReady }: HomeSequenceProps) {
           </AnimatePresence>
         </motion.div>
       </div>
+
+      {/* Compact stats for narrow viewports (side arcs hide below sm) */}
+      <AnimatePresence>
+        {showStats && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4, ease: EASE }}
+            className="relative z-20 mt-auto grid w-full max-w-md grid-cols-3 gap-x-3 gap-y-3 px-1 pb-2 sm:hidden"
+          >
+            {RANGES.map((stat) => (
+              <div key={stat.label} className="text-center">
+                <p className="font-[family-name:var(--font-sf)] text-[15px] font-semibold leading-none tracking-wide text-white">
+                  {stat.value}
+                </p>
+                <p className="mt-1 font-[family-name:var(--font-sf)] text-[10px] font-medium leading-none text-[#A8A8A8]">
+                  {stat.label}
+                </p>
+              </div>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

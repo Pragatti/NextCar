@@ -45,104 +45,122 @@ export function SideNav({
 
   return (
     <>
-      <button
-        type="button"
-        aria-label="Back"
-        className="absolute left-[22px] top-[99px] z-20 hidden size-12 items-center justify-center rounded-full border-0 bg-[#232124] text-white md:flex"
-      >
-        <ArrowLeft className="size-[18px]" strokeWidth={1.5} />
-      </button>
+      {/* Fixed viewport shell — arcs stay put when page content height changes */}
+      <div className="pointer-events-none fixed inset-0 z-20 hidden md:block">
+        <div className="relative mx-auto h-full w-full max-w-[1892px]">
+          <button
+            type="button"
+            aria-label="Back"
+            className="pointer-events-auto absolute left-[22px] top-[99px] flex size-12 items-center justify-center rounded-full border-0 bg-[#232124] text-white"
+          >
+            <ArrowLeft className="size-[18px]" strokeWidth={1.5} />
+          </button>
 
-      {/* Left — far edge, short outward dashed arc only */}
-      <nav className="pointer-events-none absolute left-[24px] top-1/2 z-20 hidden -translate-y-1/2 md:block lg:left-[110px]">
-        <Arc side="left" />
-        <ul className="relative flex h-[235px] w-[100px] flex-col justify-between py-1">
-          {leftItems.map((item, index) => {
+          {/* Left */}
+          <nav className="absolute left-[24px] top-1/2 h-[235px] w-[100px] -translate-y-1/2 lg:left-[110px]">
+            <Arc side="left" />
+            <ul className="relative flex h-full w-full flex-col justify-between py-1">
+              {leftItems.map((item, index) => {
+                const Icon = item.icon;
+                const isActive = active === item.id;
+                const showHomeHint = item.id === "home" && hintHome;
+                const label =
+                  showHomeHint && "hintLabel" in item && item.hintLabel
+                    ? item.hintLabel
+                    : item.label;
+                return (
+                  <li
+                    key={item.id}
+                    className="pointer-events-auto relative"
+                    style={{
+                      marginLeft: index === 1 ? 0 : 32,
+                    }}
+                  >
+                    <NavButton
+                      active={isActive}
+                      label={label}
+                      showLabel={
+                        !hintDocs &&
+                        (showHomeHint ||
+                          (isActive &&
+                            (item.id === "home" || item.id === "gauge")))
+                      }
+                      onClick={() => onSelect(item.id)}
+                    >
+                      <Icon
+                        className="relative z-[1] size-[18px]"
+                        strokeWidth={1.5}
+                      />
+                    </NavButton>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+
+          {/* Right */}
+          <nav className="absolute right-[24px] top-1/2 h-[235px] w-[100px] -translate-y-1/2 lg:right-[110px]">
+            <Arc side="right" />
+            <ul className="relative ml-auto flex h-full w-full flex-col justify-between py-1">
+              {rightItems.map((item, index) => {
+                const Icon = item.icon;
+                const isActive = active === item.id;
+                const showDocsHint = item.id === "docs" && hintDocs;
+                const label =
+                  showDocsHint && "hintLabel" in item && item.hintLabel
+                    ? item.hintLabel
+                    : item.label;
+                return (
+                  <li
+                    key={item.id}
+                    className="pointer-events-auto relative flex justify-end"
+                    style={{
+                      marginRight: index === 1 ? 0 : 32,
+                    }}
+                  >
+                    <NavButton
+                      active={isActive}
+                      label={label}
+                      showLabel={
+                        showDocsHint || (isActive && item.id === "docs")
+                      }
+                      labelSide="left"
+                      onClick={() => onSelect(item.id)}
+                    >
+                      <Icon
+                        className="relative z-[1] size-[18px]"
+                        strokeWidth={1.5}
+                      />
+                    </NavButton>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+        </div>
+      </div>
+
+      <div className="fixed bottom-[9.75rem] left-1/2 z-30 flex -translate-x-1/2 gap-1.5 rounded-full border border-[var(--panel-border)] bg-[var(--nav-bg)] p-1 shadow-[var(--shadow)] sm:bottom-28 sm:gap-2 sm:p-1.5 md:hidden">
+        {[...leftItems, ...rightItems.filter((i) => i.id === "docs")].map(
+          (item) => {
             const Icon = item.icon;
             const isActive = active === item.id;
-            const showHomeHint = item.id === "home" && hintHome;
-            const label =
-              showHomeHint && "hintLabel" in item && item.hintLabel
-                ? item.hintLabel
-                : item.label;
             return (
-              <li
+              <button
                 key={item.id}
-                className="pointer-events-auto relative"
-                style={{
-                  marginLeft: index === 1 ? 0 : 32,
-                }}
+                type="button"
+                aria-label={item.label}
+                onClick={() => onSelect(item.id)}
+                className={cn(
+                  "glass-orb !size-11 !min-h-0 !min-w-0",
+                  isActive && "glass-orb-active"
+                )}
               >
-                <NavButton
-                  active={isActive}
-                  label={label}
-                  showLabel={
-                    !hintDocs &&
-                    (showHomeHint ||
-                      (isActive &&
-                        (item.id === "home" || item.id === "gauge")))
-                  }
-                  onClick={() => onSelect(item.id)}
-                >
-                  <Icon className="relative z-[1] size-[18px]" strokeWidth={1.5} />
-                </NavButton>
-              </li>
+                <Icon className="relative z-[1] size-4" strokeWidth={1.5} />
+              </button>
             );
-          })}
-        </ul>
-      </nav>
-
-      {/* Right — mirror */}
-      <nav className="pointer-events-none absolute right-[24px] top-[50%] z-20 hidden -translate-y-1/2 md:block lg:right-[110px]">
-        <Arc side="right" />
-        <ul className="relative ml-auto flex h-[235px] w-[100px] flex-col justify-between py-1">
-          {rightItems.map((item, index) => {
-            const Icon = item.icon;
-            const isActive = active === item.id;
-            const showDocsHint = item.id === "docs" && hintDocs;
-            const label =
-              showDocsHint && "hintLabel" in item && item.hintLabel
-                ? item.hintLabel
-                : item.label;
-            return (
-              <li
-                key={item.id}
-                className="pointer-events-auto relative flex justify-end"
-                style={{
-                  marginRight: index === 1 ? 0 : 32,
-                }}
-              >
-                <NavButton
-                  active={isActive}
-                  label={label}
-                  showLabel={showDocsHint || (isActive && item.id === "docs")}
-                  labelSide="left"
-                  onClick={() => onSelect(item.id)}
-                >
-                  <Icon className="relative z-[1] size-[18px]" strokeWidth={1.5} />
-                </NavButton>
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
-
-      <div className="fixed bottom-28 left-1/2 z-30 flex -translate-x-1/2 gap-2 rounded-full border border-[var(--panel-border)] bg-[var(--nav-bg)] p-1.5 shadow-[var(--shadow)] md:hidden">
-        {leftItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = active === item.id;
-          return (
-            <button
-              key={item.id}
-              type="button"
-              aria-label={item.label}
-              onClick={() => onSelect(item.id)}
-              className={cn("glass-orb", isActive && "glass-orb-active")}
-            >
-              <Icon className="relative z-[1] size-4" strokeWidth={1.5} />
-            </button>
-          );
-        })}
+          }
+        )}
       </div>
     </>
   );
@@ -244,16 +262,16 @@ function Tooltip({ label, side }: { label: string; side: "left" | "right" }) {
 }
 
 function Arc({ side }: { side: "left" | "right" }) {
-  // Design: thin dashed arc on the far edge — 3px gap from the menu orbs
+  // Fixed 283×100 box — never stretches when labels/tooltips toggle
   return (
     <svg
       className={cn(
-        "pointer-events-none absolute -top-6 z-0 h-[calc(100%+48px)] w-[100px]",
+        "pointer-events-none absolute -top-6 z-0 h-[283px] w-[100px]",
         side === "left" ? "right-[50%]" : "left-[50%]"
       )}
       viewBox="0 0 70 320"
       fill="none"
-      preserveAspectRatio="none"
+      preserveAspectRatio="xMidYMid meet"
       aria-hidden
     >
       <path

@@ -16,9 +16,15 @@ type HeroProps = {
   view: HeroView;
   docsKey?: number;
   onDocsHome?: () => void;
+  onDocsRingsReady?: () => void;
 };
 
-export function Hero({ view, docsKey = 0, onDocsHome }: HeroProps) {
+export function Hero({
+  view,
+  docsKey = 0,
+  onDocsHome,
+  onDocsRingsReady,
+}: HeroProps) {
   if (view === "docs") {
     return (
       <AnimatePresence mode="wait">
@@ -30,7 +36,7 @@ export function Hero({ view, docsKey = 0, onDocsHome }: HeroProps) {
           transition={{ duration: 0.35 }}
           className="flex min-h-0 flex-1 flex-col"
         >
-          <DocsSequence onHome={onDocsHome} />
+          <DocsSequence onHome={onDocsHome} onRingsReady={onDocsRingsReady} />
         </motion.div>
       </AnimatePresence>
     );
@@ -43,20 +49,20 @@ export function Hero({ view, docsKey = 0, onDocsHome }: HeroProps) {
     : (VIEW_CARS[view as NavId] ?? CARS.home);
 
   return (
-    <div className="relative z-10 mx-auto flex w-full max-w-[1100px] flex-1 flex-col items-center px-4 pb-40 pt-15 sm:px-8">
+    <div className="relative z-10 mx-auto flex w-full max-w-[1100px] flex-1 flex-col items-center px-4 pb-36 pt-10 sm:px-8 sm:pb-40 sm:pt-15">
       <motion.div
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.12 }}
-        className="text-center"
+        className="relative z-20 px-2 text-center"
       >
-        <h1 className="font-[family-name:var(--font-display)] text-[clamp(2rem,5vw,60px)] font-normal italic uppercase leading-[39px] tracking-[0.01em]">
+        <h1 className="font-[family-name:var(--font-display)] text-[clamp(1.6rem,5vw,60px)] font-normal italic uppercase leading-[1.05] tracking-[0.01em] sm:leading-[39px]">
           <span className="text-[var(--fg)]">Engineered for </span>
           <span className="text-[var(--accent)] drop-shadow-[0_0_22px_var(--accent-glow)]">
             passion
           </span>
         </h1>
-        <p className="mt-3 font-[family-name:var(--font-sans)] text-[15px] font-medium tracking-normal text-[#D1D1D1]">
+        <p className="mt-2 font-[family-name:var(--font-sans)] text-[13px] font-medium tracking-normal text-[#D1D1D1] sm:mt-3 sm:text-[15px]">
           Precision. Power. Performance
         </p>
         <motion.span
@@ -67,7 +73,8 @@ export function Hero({ view, docsKey = 0, onDocsHome }: HeroProps) {
         />
       </motion.div>
 
-      <div className="relative mt-6 flex w-full flex-1 items-center justify-center sm:mt-8">
+      {/* Spacer keeps page flow; car is viewport-centered with innermost ring */}
+      <div className="relative mt-4 min-h-[min(72vw,300px)] w-full flex-1 sm:mt-8">
         <motion.div
           initial={{ opacity: 0, scale: 0.72 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -77,29 +84,27 @@ export function Hero({ view, docsKey = 0, onDocsHome }: HeroProps) {
             damping: 16,
             delay: 0.2,
           }}
-          className="relative z-10"
-          style={{
-            width: "min(62vw, 342.703px)",
-            height: "min(62vw, 341.38px)",
-          }}
+          className="fixed left-1/2 top-[48%] z-10 size-[min(72vw,300px)] -translate-x-1/2 -translate-y-1/2 sm:top-1/2"
         >
-          <div
-            className="relative h-full w-full overflow-hidden rounded-full border border-white/25"
-            style={{ borderWidth: 1.32 }}
-          >
-            <AnimatePresence mode="wait">
-              <motion.img
-                key={carSrc}
-                src={carSrc}
-                alt="NEXTCAR performance vehicle"
-                initial={{ opacity: 0, scale: 1.08 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.96 }}
-                transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                className="absolute inset-0 h-full w-full object-cover object-[50%_40%]"
-                draggable={false}
-              />
-            </AnimatePresence>
+          <div className="car-circle-wrap h-full w-full">
+            <div
+              className="relative h-full w-full overflow-hidden rounded-full border border-white/25"
+              style={{ borderWidth: 1.32 }}
+            >
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={carSrc}
+                  src={carSrc}
+                  alt="NEXTCAR performance vehicle"
+                  initial={{ opacity: 0, scale: 1.08 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.96 }}
+                  transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                  className="absolute inset-0 h-full w-full object-cover object-[50%_40%]"
+                  draggable={false}
+                />
+              </AnimatePresence>
+            </div>
           </div>
 
           <AnimatePresence>

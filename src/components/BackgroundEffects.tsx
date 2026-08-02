@@ -10,6 +10,16 @@ const OPEN_COMPLETE_MS = 1400;
 const FLASH_COMPLETE_MS = 1600;
 
 const RINGS = [
+  /** Innermost — 300×300, true frame center */
+  {
+    w: 300,
+    h: 300,
+    left: (FRAME_W - 300) / 2,
+    top: (FRAME_H - 300) / 2,
+    r: 150,
+    opacity: 1,
+  },
+  /** Existing rings unchanged */
   { w: 781, h: 777, left: 556, top: 97, r: 688.05, opacity: 1 },
   { w: 1292, h: 1090, left: 300, top: -52, r: 758, opacity: 1 },
   { w: 1803, h: 1403, left: 46, top: -201, r: 828.05, opacity: 1 },
@@ -73,12 +83,17 @@ export function BackgroundEffects({
     >
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,color-mix(in_srgb,var(--fg)_4%,transparent)_0%,transparent_55%)]" />
 
+      {/* Trapezoid beam — shape clipped inside, blur on outer so edges stay soft */}
       <motion.div
-        initial={{ opacity: 0, scaleY: 0.4 }}
+        initial={{ opacity: 0, scaleY: 0.45 }}
         animate={{ opacity: 1, scaleY: 1 }}
-        transition={{ duration: 1.1, ease: "easeOut" }}
-        className="spotlight absolute left-1/2 top-0 h-[62%] w-[min(220px,16%)] origin-top -translate-x-1/2"
-      />
+        transition={{ duration: 1.15, ease: "easeOut" }}
+        className="spotlight-beam absolute left-1/2 top-0 h-[70%] w-[min(560px,58vw)] origin-top -translate-x-1/2"
+      >
+        <span className="spotlight-beam__blur">
+          <span className="spotlight-beam__shape" />
+        </span>
+      </motion.div>
 
       {PARTICLES.map((p, i) => (
         <motion.span

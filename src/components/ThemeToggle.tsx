@@ -12,7 +12,7 @@ export function ThemeToggle() {
   if (!mounted) {
     return (
       <div
-        className="h-[46px] w-[98px] shrink-0 rounded-[70px] bg-[#1a1a1a]"
+        className="h-8 w-[68px] shrink-0 rounded-[70px] bg-[#1a1a1a] sm:h-[46px] sm:w-[98px]"
         aria-hidden
       />
     );
@@ -25,11 +25,10 @@ export function ThemeToggle() {
       type="button"
       aria-label="Toggle theme"
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="flex h-[35px] w-[80px] shrink-0 items-center justify-center rounded-[70px] bg-[#1a1a1a] pl-[22px] pr-[24px]  opacity-100"
-      style={{ gap: 20 }}
+      className="flex h-[30px] w-[68px] shrink-0 items-center justify-center gap-3 rounded-[70px] bg-[#1a1a1a] px-3 opacity-100 sm:h-[35px] sm:w-[80px] sm:gap-5 sm:px-0 sm:pl-[22px] sm:pr-[24px]"
     >
-      <Sun className="size-4 shrink-0 text-white" strokeWidth={1.5} />
-      <Moon className="size-4 shrink-0 text-white" strokeWidth={1.5} />
+      <Sun className="size-3.5 shrink-0 text-white sm:size-4" strokeWidth={1.5} />
+      <Moon className="size-3.5 shrink-0 text-white sm:size-4" strokeWidth={1.5} />
     </button>
   );
 }
