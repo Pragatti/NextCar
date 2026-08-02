@@ -68,7 +68,6 @@ body {
   background: color-mix(in srgb, var(--accent) 35%, transparent);
 }
 
-/* Trapezoid beam: hard shape inside → blur on wrapper softens edges */
 .spotlight-beam {
   pointer-events: none;
   overflow: visible;
@@ -86,7 +85,6 @@ body {
   position: absolute;
   inset: 8% 12%;
   display: block;
-  /* Same cone: narrow top → wide bottom */
   clip-path: polygon(44% 0%, 56% 0%, 92% 100%, 8% 100%);
   background: linear-gradient(
     180deg,
@@ -111,7 +109,6 @@ body {
   );
 }
 
-/* Soft circle glow — light pooling under the beam */
 .car-circle-wrap {
   position: relative;
 }
@@ -246,7 +243,6 @@ body {
   animation: draw-dash 1.7s linear infinite;
 }
 
-/* Docs journey cards — remounts on every step so flip always replays */
 @keyframes docs-card-flip {
   0% {
     opacity: 0;

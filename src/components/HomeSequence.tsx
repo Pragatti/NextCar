@@ -1,13 +1,9 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CARS } from "@/lib/data";
+
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-/**
- * Stats follow the car circle in a soft arc:
- * top/bottom sit closer in; middle pushes farther out.
- * `gap` = distance from the car edge (px).
- */
 const RANGES = [
   { value: "352", label: "Top Speed", side: "left" as const, top: "8%", gap: 14 },
   { value: "620", label: "Power HP", side: "left" as const, top: "42%", gap: 64 },
@@ -61,8 +57,6 @@ export function HomeSequence({ sequenceKey, onRingsReady }: HomeSequenceProps) {
         </p>
         <span className="mx-auto mt-2.5 block h-[3px] w-5 rounded-full bg-[#C85A5A]" />
       </motion.div>
-
-      {/* Spacer keeps page flow; car is viewport-centered with innermost ring */}
       <div className="relative mt-4 min-h-[min(72vw,300px)] w-full flex-1 sm:mt-8">
         <motion.div
           initial={{ opacity: 0, scale: 0.88 }}
@@ -84,8 +78,6 @@ export function HomeSequence({ sequenceKey, onRingsReady }: HomeSequenceProps) {
               />
             </div>
           </div>
-
-          {/* 2) Range indicators after car appears */}
           <AnimatePresence>
             {showStats &&
               RANGES.map((stat, i) => (
@@ -111,22 +103,20 @@ export function HomeSequence({ sequenceKey, onRingsReady }: HomeSequenceProps) {
                       : { left: `calc(100% + ${stat.gap}px)` }),
                   }}
                 >
-                  {/* Figma number box: 56×36 (grows for longer values) */}
                   <p
                     className="flex min-w-[56px] items-center justify-center whitespace-nowrap font-[family-name:var(--font-sf)] font-semibold leading-none tracking-wide text-white"
                     style={{
-                  
+
                       fontSize: 26,
                       opacity: 1,
                     }}
                   >
                     {stat.value}
                   </p>
-                  {/* Figma label box: 81×19 */}
                   <p
                     className="mt-[3px] flex min-w-[81px] items-center justify-center whitespace-nowrap text-center font-[family-name:var(--font-sf)] font-medium leading-none text-[#A8A8A8]"
                     style={{
-                    
+
                       fontSize: 13,
                       opacity: 1,
                     }}
@@ -138,8 +128,6 @@ export function HomeSequence({ sequenceKey, onRingsReady }: HomeSequenceProps) {
           </AnimatePresence>
         </motion.div>
       </div>
-
-      {/* Compact stats for narrow viewports (side arcs hide below sm) */}
       <AnimatePresence>
         {showStats && (
           <motion.div

@@ -7,20 +7,14 @@ type LapsTimelineProps = {
   onSelectLap: (id: number) => void;
 };
 
-/**
- * Design wave (viewBox 1000×100, y↓):
- * peaks at LAP 02 & 04, trough at LAP 03
- * Dot X at 10% / 30% / 50% / 70% / 90% → 100, 300, 500, 700, 900
- */
 const DOTS = [
-  { x: 100, y: 40 }, // LAP 01
-  { x: 300, y: 18 }, // LAP 02 — peak
-  { x: 500, y: 72 }, // LAP 03 — trough (active)
-  { x: 700, y: 20 }, // LAP 04 — peak
-  { x: 900, y: 38 }, // LAP 05
+  { x: 100, y: 40 },
+  { x: 300, y: 18 },
+  { x: 500, y: 72 },
+  { x: 700, y: 20 },
+  { x: 900, y: 38 },
 ] as const;
 
-/** Path passes through each DOT exactly */
 const WAVE_PATH = [
   "M 0 44",
   `C 40 42, 70 41, ${DOTS[0].x} ${DOTS[0].y}`,
@@ -31,7 +25,6 @@ const WAVE_PATH = [
   "C 940 36, 980 40, 1000 42",
 ].join(" ");
 
-/** Closed fill under the wave — strongest at the line, fades down */
 const WAVE_FILL = `${WAVE_PATH} L 1000 100 L 0 100 Z`;
 
 export function LapsTimeline({ activeLap, onSelectLap }: LapsTimelineProps) {
@@ -42,7 +35,6 @@ export function LapsTimeline({ activeLap, onSelectLap }: LapsTimelineProps) {
       transition={{ duration: 0.5, delay: 0.25 }}
       className="relative w-full overflow-visible pb-3 sm:pb-5"
     >
-      {/* Left → right red ambient glow (soft on right, a bit higher) */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 -top-6 bottom-0 -z-0 sm:-top-10"
@@ -64,8 +56,6 @@ export function LapsTimeline({ activeLap, onSelectLap }: LapsTimelineProps) {
           filter: "blur(26px)",
         }}
       />
-
-      {/* Full-bleed track */}
       <div className="relative z-[1] h-[88px] w-full sm:h-[120px]">
         <svg
           className="pointer-events-none absolute inset-0 h-full w-full overflow-visible"
@@ -75,7 +65,6 @@ export function LapsTimeline({ activeLap, onSelectLap }: LapsTimelineProps) {
           aria-hidden
         >
           <defs>
-            {/* Under-path fill: left nearly empty → right stronger */}
             <linearGradient
               id="footerWaveFill"
               x1="0"
@@ -108,7 +97,6 @@ export function LapsTimeline({ activeLap, onSelectLap }: LapsTimelineProps) {
               <feGaussianBlur stdDeviation="5" />
             </filter>
           </defs>
-
           <path
             d={WAVE_FILL}
             fill="url(#footerWaveFill)"
@@ -121,8 +109,6 @@ export function LapsTimeline({ activeLap, onSelectLap }: LapsTimelineProps) {
             mask="url(#footerWaveMask)"
             opacity="0.85"
           />
-
-          {/* Thin dashed red arc — primary stroke */}
           <path
             d={WAVE_PATH}
             stroke="#e10600"
@@ -132,8 +118,6 @@ export function LapsTimeline({ activeLap, onSelectLap }: LapsTimelineProps) {
             vectorEffect="non-scaling-stroke"
           />
         </svg>
-
-        {/* Stems start at each arc dot and drop to labels */}
         {LAPS.map((lap, index) => {
           const active = lap.id === activeLap;
           const dot = DOTS[index];
@@ -156,7 +140,6 @@ export function LapsTimeline({ activeLap, onSelectLap }: LapsTimelineProps) {
           );
         })}
 
-        {/* Dots exactly on path */}
         {LAPS.map((lap, index) => {
           const active = lap.id === activeLap;
           const dot = DOTS[index];
@@ -194,8 +177,6 @@ export function LapsTimeline({ activeLap, onSelectLap }: LapsTimelineProps) {
           );
         })}
       </div>
-
-      {/* Labels only — stems already touch dots above */}
       <div className="relative z-10 mt-4 grid w-full grid-cols-5 px-1 sm:mt-8 sm:px-0">
         {LAPS.map((lap) => {
           const active = lap.id === activeLap;

@@ -28,14 +28,12 @@ export const CARS = {
   delivery: deliveryTruck,
 } as const;
 
-/** Hero car per left-nav view */
 export const VIEW_CARS: Partial<Record<NavId, string>> = {
   home: CARS.home,
   gauge: CARS.dashboard,
   docs: CARS.docsEntry,
 };
 
-/** 4 evenly spaced slots on the journey line — 3 red dots + car as the 4th */
 export const DOCS_SLOTS = [0, 33.333, 66.666, 100] as const;
 
 export type DocsStage =
@@ -48,7 +46,6 @@ export type DocsStage =
   | "hold"
   | "thanks";
 
-/** Document click flow → truck exits → hold → thank you + Home */
 export const DOCS_JOURNEY = [
   {
     id: "spotlight",

@@ -14,9 +14,7 @@ import { cn } from "@/lib/cn";
 type SideNavProps = {
   active: NavId | null;
   onSelect: (id: NavId) => void;
-  /** Default screen: “Click for Home” tip until pressed (not active) */
   hintHome?: boolean;
-  /** After home rings: “Explore timeline” tip on right (not active) */
   hintDocs?: boolean;
 };
 
@@ -45,7 +43,6 @@ export function SideNav({
 
   return (
     <>
-      {/* Fixed viewport shell — arcs stay put when page content height changes */}
       <div className="pointer-events-none fixed inset-0 z-20 hidden md:block">
         <div className="relative mx-auto h-full w-full max-w-[1892px]">
           <button
@@ -55,8 +52,6 @@ export function SideNav({
           >
             <ArrowLeft className="size-[18px]" strokeWidth={1.5} />
           </button>
-
-          {/* Left */}
           <nav className="absolute left-[24px] top-1/2 h-[235px] w-[100px] -translate-y-1/2 lg:left-[110px]">
             <Arc side="left" />
             <ul className="relative flex h-full w-full flex-col justify-between py-1">
@@ -97,8 +92,6 @@ export function SideNav({
               })}
             </ul>
           </nav>
-
-          {/* Right */}
           <nav className="absolute right-[24px] top-1/2 h-[235px] w-[100px] -translate-y-1/2 lg:right-[110px]">
             <Arc side="right" />
             <ul className="relative ml-auto flex h-full w-full flex-col justify-between py-1">
@@ -137,7 +130,6 @@ export function SideNav({
           </nav>
         </div>
       </div>
-
       <div className="fixed bottom-[9.75rem] left-1/2 z-30 flex -translate-x-1/2 gap-1.5 rounded-full border border-[var(--panel-border)] bg-[var(--nav-bg)] p-1 shadow-[var(--shadow)] sm:bottom-28 sm:gap-2 sm:p-1.5 md:hidden">
         {[...leftItems, ...rightItems.filter((i) => i.id === "docs")].map(
           (item) => {
@@ -191,7 +183,6 @@ function NavButton({
       >
         {children}
       </button>
-
       {showLabel && labelSide === "right" && (
         <Tooltip label={label} side="right" />
       )}
@@ -215,7 +206,6 @@ function Tooltip({ label, side }: { label: string; side: "left" | "right" }) {
           side === "right" ? "left-[calc(100%+2px)]" : "right-[calc(100%+2px)]"
         )}
       >
-        {/* Dark caret — same fill as body (not red) */}
         {side === "right" && (
           <span
             aria-hidden
@@ -228,7 +218,6 @@ function Tooltip({ label, side }: { label: string; side: "left" | "right" }) {
           className="relative whitespace-nowrap rounded-full px-3.5 py-[7px] font-[family-name:var(--font-sf)] text-[12px] font-medium leading-none tracking-[0.01em] text-white"
           style={{ background: tipBg }}
         >
-          {/* Red rim — stronger on the far edge, fades toward the caret */}
           <span
             aria-hidden
             className="pointer-events-none absolute inset-0 rounded-full"
@@ -246,7 +235,6 @@ function Tooltip({ label, side }: { label: string; side: "left" | "right" }) {
           />
           <span className="relative z-[1]">{label}</span>
         </span>
-
         {side === "left" && (
           <span
             aria-hidden
@@ -260,7 +248,6 @@ function Tooltip({ label, side }: { label: string; side: "left" | "right" }) {
 }
 
 function Arc({ side }: { side: "left" | "right" }) {
-  // Fixed 283×100 box — never stretches when labels/tooltips toggle
   return (
     <svg
       className={cn(
@@ -275,10 +262,8 @@ function Arc({ side }: { side: "left" | "right" }) {
       <path
         d={
           side === "left"
-            ? // ( — bulges left; stroke sits on the right edge of this SVG (closest to menu)
-              "M 67 8 C 12 70, 12 250, 67 312"
-            : // ) — bulges right; stroke on the left edge of this SVG
-              "M 3 8 C 58 70, 58 250, 3 312"
+            ? "M 67 8 C 12 70, 12 250, 67 312"
+            : "M 3 8 C 58 70, 58 250, 3 312"
         }
         stroke="#EEEEEEAD"
         strokeWidth="1.2"

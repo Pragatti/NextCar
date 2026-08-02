@@ -15,7 +15,6 @@ export function HomeScreen() {
   const [homeKey, setHomeKey] = useState(0);
   const [showHomeRings, setShowHomeRings] = useState(false);
   const [hintDocs, setHintDocs] = useState(false);
-  /** Timeline: rings off until car appears, then stay on */
   const [showDocsRings, setShowDocsRings] = useState(false);
 
   const handleNav = (id: NavId) => {
@@ -72,7 +71,6 @@ export function HomeScreen() {
         }`}
       >
         <AnimatePresence>
-          {/* Default: upper beam spotlight only (no rings) */}
           {isDefault && (
             <motion.div
               key="bg-default"
@@ -85,7 +83,6 @@ export function HomeScreen() {
             </motion.div>
           )}
 
-          {/* Docs: spotlight always; rings after car appears, then stay */}
           {isDocs && (
             <motion.div
               key={`bg-docs-${docsKey}`}
@@ -98,7 +95,6 @@ export function HomeScreen() {
             </motion.div>
           )}
 
-          {/* Other nav (not home/docs): static rings */}
           {activeNav !== null &&
             activeNav !== "home" &&
             activeNav !== "docs" && (
@@ -113,7 +109,6 @@ export function HomeScreen() {
               </motion.div>
             )}
 
-          {/* Home: rings after stats, stay visible */}
           {isHome && showHomeRings && (
             <motion.div
               key={`bg-home-${homeKey}`}
@@ -127,7 +122,6 @@ export function HomeScreen() {
             </motion.div>
           )}
         </AnimatePresence>
-
         <Header />
         <SideNav
           active={activeNav}
@@ -135,7 +129,6 @@ export function HomeScreen() {
           hintHome={isDefault}
           hintDocs={hintDocs}
         />
-
         {isHome ? (
           <HomeSequence
             sequenceKey={homeKey}

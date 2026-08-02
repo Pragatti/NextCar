@@ -4,13 +4,10 @@ import { motion } from "framer-motion";
 const FRAME_W = 1892;
 const FRAME_H = 968;
 
-/** Home open stay: delay 0.08 + 2*0.12 + duration 0.85 */
 const OPEN_COMPLETE_MS = 1400;
-/** Show/hide flash: in + hold + out */
 const FLASH_COMPLETE_MS = 1600;
 
 const RINGS = [
-  /** Innermost — 300×300, true frame center */
   {
     w: 300,
     h: 300,
@@ -19,7 +16,6 @@ const RINGS = [
     r: 150,
     opacity: 1,
   },
-  /** Existing rings unchanged */
   { w: 781, h: 777, left: 556, top: 97, r: 688.05, opacity: 1 },
   { w: 1292, h: 1090, left: 300, top: -52, r: 758, opacity: 1 },
   { w: 1803, h: 1403, left: 46, top: -201, r: 828.05, opacity: 1 },
@@ -43,13 +39,9 @@ const PARTICLES = [
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 type BackgroundEffectsProps = {
-  /** Staggered open animation for concentric rings */
   open?: boolean;
-  /** Render concentric rings at all */
   rings?: boolean;
-  /** Show → hold → hide (docs transition). Rings do not stay. */
   flash?: boolean;
-  /** Fires once after open/flash finishes */
   onOpenComplete?: () => void;
 };
 
@@ -82,8 +74,6 @@ export function BackgroundEffects({
       aria-hidden
     >
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,color-mix(in_srgb,var(--fg)_4%,transparent)_0%,transparent_55%)]" />
-
-      {/* Trapezoid beam — shape clipped inside, blur on outer so edges stay soft */}
       <motion.div
         initial={{ opacity: 0, scaleY: 0.45 }}
         animate={{ opacity: 1, scaleY: 1 }}
@@ -94,7 +84,6 @@ export function BackgroundEffects({
           <span className="spotlight-beam__shape" />
         </span>
       </motion.div>
-
       {PARTICLES.map((p, i) => (
         <motion.span
           key={i}
@@ -118,7 +107,7 @@ export function BackgroundEffects({
 
       {rings && (
         <div
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+          className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 md:block"
           style={{
             width: `min(100%, ${FRAME_W}px)`,
             aspectRatio: `${FRAME_W} / ${FRAME_H}`,

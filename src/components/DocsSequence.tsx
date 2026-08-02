@@ -4,9 +4,7 @@ import { CARS, DOCS_JOURNEY, DOCS_SLOTS } from "@/lib/data";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 const STEP_MS = 1200;
-/** Last track stop (Vehicle Pickup) — shorter hold before truck */
 const LAST_CAR_MS = 700;
-/** Brief beat after 4 steps before car+truck */
 const REVEAL_MS = 280;
 const LOAD_MS = 550;
 const AWAY_MS = 650;
@@ -57,7 +55,6 @@ function useDeliveryScale() {
 
 type DocsSequenceProps = {
   onHome?: () => void;
-  /** After spotlight car appears — open concentric rings and keep them */
   onRingsReady?: () => void;
 };
 
@@ -68,7 +65,6 @@ export function DocsSequence({ onHome, onRingsReady }: DocsSequenceProps) {
   const spotlightSize = narrow ? 220 : 343;
   const trackSize = narrow ? 64 : 84;
   const cardLift = narrow ? 100 : 136;
-  /** Inset track so first/last card + car stay fully visible */
   const trackInset = narrow ? 0.2 : 0.14;
 
   useEffect(() => {
@@ -94,7 +90,6 @@ export function DocsSequence({ onHome, onRingsReady }: DocsSequenceProps) {
   const isTruckAway = current.stage === "truckAway";
   const isThanks = current.stage === "thanks";
 
-  // First step: car only → then rings open and stay for the rest of the flow
   useEffect(() => {
     if (!onRingsReady || !isSpotlight) return;
     const t = window.setTimeout(() => onRingsReady(), 650);
@@ -112,7 +107,6 @@ export function DocsSequence({ onHome, onRingsReady }: DocsSequenceProps) {
         isDeliveryScene ? "z-40 max-w-none" : "z-10 max-w-[1200px]"
       }`}
     >
-      {/* Always stays */}
       <div className="relative z-20 shrink-0 px-2 text-center">
         <h1 className="font-[family-name:var(--font-display)] text-[clamp(1.6rem,5vw,60px)] font-normal italic uppercase leading-[1.05] tracking-[0.01em] sm:leading-[39px]">
           <span className="text-[var(--fg)]">Engineered for </span>
@@ -125,10 +119,7 @@ export function DocsSequence({ onHome, onRingsReady }: DocsSequenceProps) {
         </p>
         <span className="mx-auto mt-2.5 block h-[3px] w-5 rounded-full bg-[#C85A5A]" />
       </div>
-
-      {/* overflow must stay visible — overflow-x-clip also clips Y and cuts cards/car */}
       <div className="relative mt-4 flex min-h-0 w-full max-w-[1200px] flex-1 items-center justify-center overflow-visible">
-        {/* Track line + dots during journey */}
         <AnimatePresence>
           {isTrack && (
             <motion.div
@@ -150,13 +141,11 @@ export function DocsSequence({ onHome, onRingsReady }: DocsSequenceProps) {
                       className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2"
                       style={{ left: `${pct}%` }}
                     >
-                      {/* Soft red halo */}
                       <span
                         aria-hidden
                         className="absolute left-1/2 top-1/2 size-5 -translate-x-1/2 -translate-y-1/2 rounded-full sm:size-7"
                         style={{ background: "rgba(225, 6, 0, 0.2)" }}
                       />
-                      {/* Solid core */}
                       <span className="relative block size-2 rounded-full bg-[#e10600] sm:size-[10px]" />
                     </span>
                   );
@@ -165,8 +154,6 @@ export function DocsSequence({ onHome, onRingsReady }: DocsSequenceProps) {
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* Journey car (spotlight → track) */}
         <AnimatePresence>
           {(isSpotlight || isTrack) && (
             <motion.div
@@ -213,8 +200,6 @@ export function DocsSequence({ onHome, onRingsReady }: DocsSequenceProps) {
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* Card travels with car — same left + 0.95s timing; flip only on first */}
         {isTrack && current.tooltip && (
           <motion.div
             initial={false}
@@ -243,7 +228,6 @@ export function DocsSequence({ onHome, onRingsReady }: DocsSequenceProps) {
           </motion.div>
         )}
 
-        {/* Delivery — full-bleed so truck can exit past the viewport edge */}
         <AnimatePresence>
           {isDeliveryScene && (
             <motion.div
@@ -268,7 +252,6 @@ export function DocsSequence({ onHome, onRingsReady }: DocsSequenceProps) {
                   transformOrigin: "center center",
                 }}
               >
-                {/* Car — quick appear, then slides behind truck */}
                 <motion.div
                   initial={{ opacity: 0, left: 140 }}
                   animate={
@@ -298,8 +281,6 @@ export function DocsSequence({ onHome, onRingsReady }: DocsSequenceProps) {
                     </div>
                   </div>
                 </motion.div>
-
-                {/* Truck — top-right corner zoom-in, then full exit to the right */}
                 <motion.div
                   className="absolute z-40 origin-top-right"
                   style={{
@@ -336,8 +317,6 @@ export function DocsSequence({ onHome, onRingsReady }: DocsSequenceProps) {
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* After truck: brief hold → THANK YOU + Home (no circle) */}
         <AnimatePresence>
           {isThanks && (
             <motion.div
@@ -356,7 +335,6 @@ export function DocsSequence({ onHome, onRingsReady }: DocsSequenceProps) {
               >
                 Thank You
               </motion.h2>
-
               <motion.button
                 type="button"
                 initial={{ opacity: 0, y: 14 }}

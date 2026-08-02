@@ -72,8 +72,6 @@ export function Hero({
           className="mx-auto mt-2.5 block h-[3px] w-5 origin-center rounded-full bg-[#C85A5A]"
         />
       </motion.div>
-
-      {/* Spacer keeps page flow; car is viewport-centered with innermost ring */}
       <div className="relative mt-4 min-h-[min(72vw,300px)] w-full flex-1 sm:mt-8">
         <motion.div
           initial={{ opacity: 0, scale: 0.72 }}
@@ -106,7 +104,6 @@ export function Hero({
               </AnimatePresence>
             </div>
           </div>
-
           <AnimatePresence>
             {isDashboard &&
               FEATURES.map((feature, i) => (

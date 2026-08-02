@@ -1,32 +1,64 @@
-# React + TypeScript + Vite
+# NEXTCAR
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Frontend assignment — recreating the NEXTCAR Figma UI in React.
 
-Currently, two official plugins are available:
+Repo: https://github.com/Pragatti/NextCar
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Run it
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+yarn
+yarn dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Then open `http://localhost:5173`.
+
+```bash
+yarn build
+yarn preview
+```
+
+Needs Node 18+.
+
+## Stack
+
+- React 19 + TypeScript + Vite
+- Tailwind CSS v4
+- Framer Motion
+- Lucide icons
+- next-themes for light/dark
+
+## What’s in it
+
+Single-page car experience based on the Figma frames:
+
+- Home with car, stats, and rings
+- Side nav (home / timeline hints, active states)
+- Explore timeline — car on the track, cards, truck delivery, thank you
+- Footer laps track
+- Light and dark mode
+- Works on desktop and mobile
+
+## Notes
+
+I used Vite instead of Next.js since this is a single-screen UI and didn’t need routing or SSR.
+
+Desktop (~1892×968) is the main layout from Figma. On smaller screens things scale down (car, delivery truck, nav) instead of a separate mobile design.
+
+Timeline auto-plays when you hit Explore timeline. Timings are a bit snappy so the full flow is easy to demo.
+
+No backend — pure frontend.
+
+## Folder layout
+
+```
+src/
+  components/
+  lib/
+  assets/
+  index.css
+```
+
+## Demo
+
+Drop screenshots or a short Loom/video here before submitting.

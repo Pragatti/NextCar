@@ -8,7 +8,6 @@ export function ThemeToggle() {
 
   useEffect(() => setMounted(true), []);
 
-  // Figma frame is 46×98 @ 90° → renders as 98×46 horizontal pill
   if (!mounted) {
     return (
       <div
