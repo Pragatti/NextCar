@@ -190,7 +190,6 @@ export function BackgroundEffects({
         </div>
       )}
 
-      <div className="absolute inset-x-0 bottom-0 h-48 bg-[radial-gradient(ellipse_at_bottom,color-mix(in_srgb,var(--accent)_28%,transparent),transparent_70%)]" />
     </div>
   );
 }

@@ -4,16 +4,22 @@ import { CARS, DOCS_JOURNEY, DOCS_SLOTS } from "@/lib/data";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 const STEP_MS = 1200;
-/** Brief beat after 4 steps before car+truck — keep short */
-const REVEAL_MS = 1400;
-const LOAD_MS = 1100;
-const AWAY_MS = 900;
-const HOLD_MS = 2200;
-const DELIVERY_MS = 1400;
+/** Last track stop (Vehicle Pickup) — shorter hold before truck */
+const LAST_CAR_MS = 700;
+/** Brief beat after 4 steps before car+truck */
+const REVEAL_MS = 280;
+const LOAD_MS = 550;
+const AWAY_MS = 650;
+const HOLD_MS = 900;
+const DELIVERY_MS = 600;
 const DELIVERY_W = 1500;
 const DELIVERY_H = 580;
 
-function stepDuration(stage: (typeof DOCS_JOURNEY)[number]["stage"]) {
+function stepDuration(
+  stage: (typeof DOCS_JOURNEY)[number]["stage"],
+  id?: (typeof DOCS_JOURNEY)[number]["id"]
+) {
+  if (id === "pickup") return LAST_CAR_MS;
   if (stage === "reveal") return REVEAL_MS;
   if (stage === "loadBehind") return LOAD_MS;
   if (stage === "truckAway") return AWAY_MS;
@@ -70,7 +76,8 @@ export function DocsSequence({ onHome, onRingsReady }: DocsSequenceProps) {
     const timers: number[] = [];
     let elapsed = 0;
     for (let i = 1; i < DOCS_JOURNEY.length; i++) {
-      elapsed += stepDuration(DOCS_JOURNEY[i - 1].stage);
+      const prev = DOCS_JOURNEY[i - 1];
+      elapsed += stepDuration(prev.stage, prev.id);
       timers.push(window.setTimeout(() => setStep(i), elapsed));
     }
     return () => timers.forEach((id) => window.clearTimeout(id));
@@ -272,7 +279,7 @@ export function DocsSequence({ onHome, onRingsReady }: DocsSequenceProps) {
                         : { opacity: 1, left: 140 }
                   }
                   transition={{
-                    duration: isLoadBehind ? 0.75 : 0.22,
+                    duration: isLoadBehind ? 0.45 : 0.18,
                     ease: EASE,
                   }}
                   className="absolute top-[calc(50%-43px)] z-[5] size-[148px] -translate-y-1/2"
@@ -292,26 +299,30 @@ export function DocsSequence({ onHome, onRingsReady }: DocsSequenceProps) {
                   </div>
                 </motion.div>
 
-                {/* Truck — exits fully past the right edge of the screen */}
+                {/* Truck — top-right corner zoom-in, then full exit to the right */}
                 <motion.div
-                  className="absolute z-40"
+                  className="absolute z-40 origin-top-right"
                   style={{
                     top: -52,
                     left: 140,
                     width: 1500,
                     height: 580,
-                    opacity: 1,
                   }}
-                  initial={{ opacity: 0, x: 100 }}
+                  initial={{
+                    opacity: 0,
+                    scale: 0.72,
+                    x: 260,
+                    y: -140,
+                  }}
                   animate={
                     isTruckAway
-                      ? { opacity: 1, x: "110vw" }
-                      : { opacity: 1, x: 0 }
+                      ? { opacity: 1, scale: 1, x: "110vw", y: 0 }
+                      : { opacity: 1, scale: 1, x: 0, y: 0 }
                   }
                   transition={
                     isTruckAway
-                      ? { duration: 0.85, ease: [0.33, 0.1, 0.67, 0.2] }
-                      : { duration: 0.32, delay: 0, ease: EASE }
+                      ? { duration: 0.55, ease: [0.33, 0.1, 0.67, 0.2] }
+                      : { duration: 0.38, ease: EASE }
                   }
                 >
                   <img

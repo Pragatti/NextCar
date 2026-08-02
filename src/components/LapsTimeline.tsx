@@ -31,35 +31,95 @@ const WAVE_PATH = [
   "C 940 36, 980 40, 1000 42",
 ].join(" ");
 
+/** Closed fill under the wave — strongest at the line, fades down */
+const WAVE_FILL = `${WAVE_PATH} L 1000 100 L 0 100 Z`;
+
 export function LapsTimeline({ activeLap, onSelectLap }: LapsTimelineProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.25 }}
-      className="relative w-full pb-3 sm:pb-5"
+      className="relative w-full overflow-visible pb-3 sm:pb-5"
     >
+      {/* Left → right red ambient glow (soft on right, a bit higher) */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 -top-6 bottom-0 -z-0 sm:-top-10"
+        style={{
+          background: `
+            linear-gradient(
+              to right,
+              transparent 0%,
+              transparent 22%,
+              rgba(225, 6, 0, 0.05) 48%,
+              rgba(225, 6, 0, 0.12) 75%,
+              rgba(225, 6, 0, 0.2) 100%
+            )
+          `,
+          maskImage:
+            "linear-gradient(to top, transparent 0%, black 28%, black 62%, transparent 100%)",
+          WebkitMaskImage:
+            "linear-gradient(to top, transparent 0%, black 28%, black 62%, transparent 100%)",
+          filter: "blur(26px)",
+        }}
+      />
+
       {/* Full-bleed track */}
-      <div className="relative h-[88px] w-full sm:h-[120px]">
+      <div className="relative z-[1] h-[88px] w-full sm:h-[120px]">
         <svg
-          className="absolute inset-0 h-full w-full"
+          className="pointer-events-none absolute inset-0 h-full w-full overflow-visible"
           viewBox="0 0 1000 100"
           preserveAspectRatio="none"
           fill="none"
           aria-hidden
         >
           <defs>
-            {/* Minor red fill under the dashed arc */}
-            <linearGradient id="footerWaveFill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#e10600" stopOpacity="0.28" />
-              <stop offset="35%" stopColor="#e10600" stopOpacity="0.1" />
-              <stop offset="100%" stopColor="#e10600" stopOpacity="0" />
+            {/* Under-path fill: left nearly empty → right stronger */}
+            <linearGradient
+              id="footerWaveFill"
+              x1="0"
+              y1="0"
+              x2="1"
+              y2="0"
+              gradientUnits="objectBoundingBox"
+            >
+              <stop offset="0%" stopColor="#e10600" stopOpacity="0.02" />
+              <stop offset="30%" stopColor="#e10600" stopOpacity="0.05" />
+              <stop offset="60%" stopColor="#e10600" stopOpacity="0.12" />
+              <stop offset="85%" stopColor="#e10600" stopOpacity="0.2" />
+              <stop offset="100%" stopColor="#e10600" stopOpacity="0.26" />
             </linearGradient>
+            <linearGradient id="footerWaveFade" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="white" stopOpacity="1" />
+              <stop offset="50%" stopColor="white" stopOpacity="0.5" />
+              <stop offset="100%" stopColor="white" stopOpacity="0" />
+            </linearGradient>
+            <mask id="footerWaveMask">
+              <path d={WAVE_FILL} fill="url(#footerWaveFade)" />
+            </mask>
+            <filter
+              id="footerWaveBlur"
+              x="-2%"
+              y="-10%"
+              width="104%"
+              height="140%"
+            >
+              <feGaussianBlur stdDeviation="5" />
+            </filter>
           </defs>
 
           <path
-            d={`${WAVE_PATH} L 1000 100 L 0 100 Z`}
+            d={WAVE_FILL}
             fill="url(#footerWaveFill)"
+            mask="url(#footerWaveMask)"
+            filter="url(#footerWaveBlur)"
+          />
+          <path
+            d={WAVE_FILL}
+            fill="url(#footerWaveFill)"
+            mask="url(#footerWaveMask)"
+            opacity="0.85"
           />
 
           {/* Thin dashed red arc — primary stroke */}
@@ -136,7 +196,7 @@ export function LapsTimeline({ activeLap, onSelectLap }: LapsTimelineProps) {
       </div>
 
       {/* Labels only — stems already touch dots above */}
-      <div className="relative mt-4 grid w-full grid-cols-5 px-1 sm:mt-8 sm:px-0">
+      <div className="relative z-10 mt-4 grid w-full grid-cols-5 px-1 sm:mt-8 sm:px-0">
         {LAPS.map((lap) => {
           const active = lap.id === activeLap;
 

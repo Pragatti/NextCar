@@ -121,9 +121,7 @@ export function SideNav({
                     <NavButton
                       active={isActive}
                       label={label}
-                      showLabel={
-                        showDocsHint || (isActive && item.id === "docs")
-                      }
+                      showLabel={showDocsHint && !isActive}
                       labelSide="left"
                       onClick={() => onSelect(item.id)}
                     >
@@ -267,7 +265,7 @@ function Arc({ side }: { side: "left" | "right" }) {
     <svg
       className={cn(
         "pointer-events-none absolute -top-6 z-0 h-[283px] w-[100px]",
-        side === "left" ? "right-[50%]" : "left-[50%]"
+        side === "left" ? "right-[60%]" : "left-[60%]"
       )}
       viewBox="0 0 70 320"
       fill="none"
