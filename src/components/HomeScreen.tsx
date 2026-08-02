@@ -61,13 +61,13 @@ export function HomeScreen() {
 
   return (
     <div
-      className={`relative min-h-dvh bg-[var(--bg)] text-[var(--fg)] transition-colors duration-500 ${
-        isDocs ? "overflow-x-visible" : "overflow-x-hidden"
+      className={`relative h-dvh bg-[var(--bg)] text-[var(--fg)] transition-colors duration-500 ${
+        isDocs ? "overflow-x-visible overflow-y-hidden" : "overflow-hidden"
       }`}
     >
       <div
-        className={`relative mx-auto flex min-h-dvh w-full max-w-[1892px] flex-col ${
-          isDocs ? "overflow-x-visible" : "overflow-x-hidden"
+        className={`relative mx-auto flex h-full min-h-0 w-full max-w-[1892px] flex-col ${
+          isDocs ? "overflow-x-visible overflow-y-hidden" : "overflow-hidden"
         }`}
       >
         <AnimatePresence>

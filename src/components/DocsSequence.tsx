@@ -40,11 +40,17 @@ function useIsNarrow(breakpoint = 640) {
 }
 
 function useDeliveryScale() {
-  const [scale, setScale] = useState(1);
+  const [scale, setScale] = useState(0.65);
   useEffect(() => {
     const update = () => {
-      const pad = window.innerWidth < 640 ? 16 : 48;
-      setScale(Math.min(1, (window.innerWidth - pad) / DELIVERY_W));
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const padX = vw < 640 ? 16 : 48;
+      const widthScale = (vw - padX) / DELIVERY_W;
+      const reserved = vw < 640 ? 280 : 340;
+      const heightScale = Math.max(180, vh - reserved) / DELIVERY_H;
+      const laptopCap = vh < 900 || vw < 1440 ? 0.62 : 0.85;
+      setScale(Math.min(laptopCap, widthScale, heightScale));
     };
     update();
     window.addEventListener("resize", update);
@@ -103,7 +109,7 @@ export function DocsSequence({ onHome, onRingsReady }: DocsSequenceProps) {
 
   return (
     <div
-      className={`relative mx-auto flex w-full flex-1 flex-col items-center px-4 pb-28 pt-10 sm:px-8 sm:pb-40 sm:pt-12 ${
+      className={`relative mx-auto flex min-h-0 w-full flex-1 flex-col items-center px-4 pb-36 pt-8 sm:px-8 sm:pb-44 sm:pt-10 ${
         isDeliveryScene ? "z-40 max-w-none" : "z-10 max-w-[1200px]"
       }`}
     >
@@ -236,7 +242,7 @@ export function DocsSequence({ onHome, onRingsReady }: DocsSequenceProps) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.18, ease: EASE }}
-              className="relative z-30 flex w-screen max-w-none items-center justify-center overflow-visible"
+              className="relative z-30 flex w-screen max-w-none shrink-0 items-center justify-center overflow-visible"
               style={{
                 height: DELIVERY_H * deliveryScale,
                 marginLeft: "calc(50% - 50vw)",
